@@ -4,38 +4,48 @@ require "net/http"
 require "uri"
 require "json"
 
-oauth_access_token = "CAACEdEose0cBAAeZBIkl3xGWakvdgapSZAw9L1WRonUlHBsh5T6IMdOjSHb7VAfNSOYIzzzFwJDVBRngPkCXBjZCV8glZBQDBL4B87QkwsWDPA3JMwTS1t1JE3COChtmGZBltNltuojrdvaqjEx9YWaLR8rZBXSfyS39VKbnqTHLwBSCVRYrEfRGsGs7URR44OKNUOMJjRNgZDZD"
+#config
+APP_ID = '631312703619289'
+APP_SECRET = '7f2424ae09f0fbbf008eae86307382f2'
+CALLBACK_URL = '/'
 
-
+#Prepare graph
+oauth = Koala::Facebook::OAuth.new(APP_ID, APP_SECRET, CALLBACK_URL)
+oauth_access_token = oauth.get_app_access_token
 graph = Koala::Facebook::API.new(oauth_access_token)
 
 
-
-
+#actions
 get '/' do
 	erb :index
 end
 
 post '/' do
 
-	gender = {attending: {}, maybe: {}}
+	gender = {attending: {}, maybe: {}, ratio: {}}
 	match = /events\/(\d+)/.match(params[:event][:url])
 
 	if !match.nil?
 
 		event_id = match[1] 
 
+		event_info = event_attending = graph.get_object(event_id)
 		event_attending = graph.get_object("#{event_id}/attending/?fields=first_name")
 		event_maybe = graph.get_object("#{event_id}/maybe/?fields=first_name")
 		
 		
 		gender[:attending] = genderize_names(event_attending)
 		gender[:maybe] = genderize_names(event_maybe)
+
+		attending_total = gender[:attending][:male] + gender[:attending][:female] + gender[:attending][:unrecognized]
+		gender[:ratio][:male] = ((gender[:attending][:male].to_f/attending_total.to_f) * 100).round(2)
+		gender[:ratio][:female] = ((gender[:attending][:female].to_f/attending_total.to_f)*100).round(2)
+		gender[:ratio][:unrecognized] = ((gender[:attending][:unrecognized].to_f/attending_total.to_f)*100).round(2)
 		
 			
 	end
 
-	erb :index, locals: {gender: gender} 
+	erb :index, locals: {gender: gender, event: event_info} 
 
 end
 

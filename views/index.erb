@@ -8,14 +8,15 @@
 			<input type="text" name="event[url]">
 			<input type="submit" value="submit">
 		</form>
-
+		<hr />
 		<% if defined? gender %>
 			<div>
+				<h3>EVENT: <%=event['name']%></h3>
 				<h2>Attending</h2>
 				<table>	
-					<tr><td>male: </td><td> <%=gender[:attending][:male] %> </td></tr>
-					<tr><td>female: </td><td> <%=gender[:attending][:female] %> </td></tr>
-					<tr><td>unrecognized: </td><td> <%=gender[:attending][:unrecognized] %> </td></tr>
+					<tr><td>male: </td><td> <%=gender[:attending][:male] %> (<%=gender[:ratio][:male] %>%)</td></tr>
+					<tr><td>female: </td><td> <%=gender[:attending][:female] %> (<%=gender[:ratio][:female] %>%)</td></tr>
+					<tr><td>unrecognized: </td><td> <%=gender[:attending][:unrecognized] %> (<%=gender[:ratio][:unrecognized] %>%)</td></tr>
 					<tr><td></td> 
 						<td>
 							<small>
