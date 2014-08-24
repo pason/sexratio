@@ -1,5 +1,9 @@
 <html>
 	<head>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="//www.google.com/jsapi"></script> 	
+		<%= js :app %>
+		<%= css :application, :media => 'screen' %>
 	</head>
 	<body>
 
@@ -10,39 +14,21 @@
 		</form>
 		<hr />
 		<% if defined? gender %>
+			
+
 			<div>
 				<h3>EVENT: <%=event['name']%></h3>
 				<h2>Attending</h2>
-				<table>	
-					<tr><td>male: </td><td> <%=gender[:attending][:male] %> (<%=gender[:ratio][:male] %>%)</td></tr>
-					<tr><td>female: </td><td> <%=gender[:attending][:female] %> (<%=gender[:ratio][:female] %>%)</td></tr>
-					<tr><td>unrecognized: </td><td> <%=gender[:attending][:unrecognized] %> (<%=gender[:ratio][:unrecognized] %>%)</td></tr>
-					<tr><td></td> 
-						<td>
-							<small>
-							<% gender[:attending][:unbucket].each do |name| %>
-								<%= name %>,
-							<% end %>
-							</small>	
-					 	</td>
-					</tr>
-				</table>
+				<div>
+					<%= pie_chart(gender[:attending]) %>
+				</div>
+				
 
 				<h2>Maybe</h2>
-				<table>	
-					<tr><td>male: </td><td> <%=gender[:maybe][:male] %> </td></tr>
-					<tr><td>female: </td><td> <%=gender[:maybe][:female] %> </td></tr>
-					<tr><td>unrecognized: </td><td> <%=gender[:maybe][:unrecognized] %> </td></tr>
-					<tr><td></td> 
-						<td>
-							<small>
-							<% gender[:maybe][:unbucket].each do |name| %>
-								<%= name %>,
-							<% end %>
-							</small>	
-					 	</td>
-					</tr>
-				</table>
+				<div>
+					<%= pie_chart(gender[:maybe],  height: '200px') %>
+				</div>
+				
 			</div>
 		<% end %>
 	</body>

@@ -3,6 +3,10 @@ require 'koala'
 require "net/http"
 require "uri"
 require "json"
+require 'sinatra/base'
+require 'sinatra/assetpack'
+require 'chartkick'
+
 
 #config
 APP_ID = '631312703619289'
@@ -13,6 +17,34 @@ CALLBACK_URL = '/'
 oauth = Koala::Facebook::OAuth.new(APP_ID, APP_SECRET, CALLBACK_URL)
 oauth_access_token = oauth.get_app_access_token
 graph = Koala::Facebook::API.new(oauth_access_token)
+
+
+
+#Assets configuration
+set :root, File.dirname(__FILE__) 
+
+register Sinatra::AssetPack
+
+assets {
+serve '/js',     from: 'app/js'        # Default
+serve '/css',    from: 'app/css'       # Default
+serve '/images', from: 'app/images'    # Default
+
+
+js :app, [
+  '/js/*.js'
+]
+
+css :application, [
+  '/css/styles.css'
+]
+
+js_compression  :jsmin    # :jsmin | :yui | :closure | :uglify
+css_compression :simple   # :simple | :sass | :yui | :sqwish
+}
+
+
+
 
 
 #actions
