@@ -7,4 +7,5 @@ timeout: 30
 environment: production
 pid: tmp/thin.pid
 log: log/thin.log
+rackup: config.ru
 daemonize: true
