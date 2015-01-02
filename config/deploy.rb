@@ -48,3 +48,8 @@ namespace :deploy do
   end
 
 end
+
+
+
+
+# nohup ruby gender.rb &> /dev/null &
